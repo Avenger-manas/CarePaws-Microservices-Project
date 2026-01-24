@@ -1,0 +1,64 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: NOTIFICATION-SERVICE
+
+  data:
+    mongodb:
+      uri: mongodb+srv://rastogimanas329:Ys54a4sUZbZpCxhP@cluster0.vl8euvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: carepaws-report-service
+
+internal:
+  service:
+    token: INTERNAl-NGO-AND-MUNICIPAL-SERVICE-TOKEN
+
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: dolpi
+  password: dolpi123
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+resilience4j:
+  retry:
+    instances:
+      ngoRetry:
+        maxAttempts: 3
+        waitDuration: 300ms
+
+      municipalRetry:
+        maxAttempts: 3
+        waitDuration: 300ms
+
+      notificationRetry:
+        maxAttempts: 3
+        waitDuration: 300ms
+
+  circuitbreaker:
+    instances:
+      ngoCB:
+        failureRateThreshold: 50
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 15s
+
+      municipalCB:
+        failureRateThreshold: 50
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 15s
+
+      notificationCB:
+        failureRateThreshold: 50
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 15s
