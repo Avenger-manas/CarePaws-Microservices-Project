@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: CAREPAWS-AUTH-SERVICE
+
+  data:
+    mongodb:
+      uri: mongodb+srv://rastogimanas329:Ys54a4sUZbZpCxhP@cluster0.vl8euvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: carepaws-authntication
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1060034297672-4vgv5ihd1qca2p39can0pvhod5hsb29o.apps.googleusercontent.com
+            client-secret: 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
+
+server:
+  port: 8081
+  servlet:
+    context-path: /carepaws
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
