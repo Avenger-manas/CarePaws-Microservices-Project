@@ -12,7 +12,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false    # <-- Continue all services even if one fails
+      fail-fast: false    # Continue all services even if one fails
       matrix:
         service: [
           "ngo-service",
@@ -26,21 +26,22 @@ jobs:
     name: Build & Test ${{ matrix.service }}
 
     steps:
+      # 1. Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Setup Java 17
       - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
+      # 3. Navigate to service
       - name: Navigate to service
         run: cd ${{ matrix.service }}
 
-      - name: Make Maven wrapper executable
-        run: chmod +x mvnw
-
+      # 4. Cache Maven dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
@@ -49,10 +50,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      # 5. Build & run tests using system Maven
       - name: Build and Test
-        run: ./mvnw clean verify -B || echo "Build/Test failed but continuing..."
+        run: mvn clean verify -B || echo "Build/Test failed but continuing..."
 
-      - name: Upload Test Reports (optional)
+      # 6. Upload test reports (optional)
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
