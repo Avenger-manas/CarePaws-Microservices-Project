@@ -10,17 +10,6 @@ jobs:
   build-and-docker:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        service:
-          - carepaws
-          - apigateway
-          - eureka-server
-          - notification-service
-          - muncipal-service
-          - Report-Service
-          - ngo-service/NGO-SERVICE
-
     steps:
       # 1. Checkout repository
       - name: Checkout repository
@@ -34,21 +23,36 @@ jobs:
           java-version: '17'
           cache: maven
 
-      # 3. Debug folder (optional, remove after confirming)
-      - name: Debug current folder
-        working-directory: ${{ matrix.service }}
+      # 3. Debug root folder (optional)
+      - name: Debug root folder
         run: pwd && ls -la
 
-      # 4. Build Maven project
-      - name: Build Maven project
-        working-directory: ${{ matrix.service }}
+      # 4. Build all microservices from root POM
+      - name: Build Maven projects
+        working-directory: .
         run: mvn clean package -DskipTests
 
-      # 5. Build Docker image
-      - name: Build Docker image
-        working-directory: ${{ matrix.service }}
+      # 5. Build Docker images for each service
+      - name: Build Docker images
         run: |
-          IMAGE_NAME=carepaws-$(echo "${{ matrix.service }}" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
-          docker build -t $IMAGE_NAME:latest .
+          services=(carepaws apigateway eureka-server notification-service muncipal-service Report-Service ngo-service/NGO-SERVICE)
+          for service in "${services[@]}"; do
+            IMAGE_NAME=carepaws-$(echo "$service" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+            echo "Building Docker image for $service → $IMAGE_NAME:latest"
+            docker build -t $IMAGE_NAME:latest "$service"
+          done
 
-      
+      # 6. Optional: Push to Docker Hub
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #
+      # - name: Push Docker images
+      #   run: |
+      #     services=(carepaws apigateway eureka-server notification-service muncipal-service Report-Service ngo-service/NGO-SERVICE)
+      #     for service in "${services[@]}"; do
+      #       IMAGE_NAME=carepaws-$(echo "$service" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+      #       docker push $IMAGE_NAME:latest
+      #     done
