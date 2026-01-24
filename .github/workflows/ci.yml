@@ -23,7 +23,7 @@ jobs:
           "eureka-server"
         ]
     name: Build & Test ${{ matrix.service }}
-    
+
     steps:
       # 1. Checkout the repository
       - name: Checkout code
@@ -36,8 +36,8 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 3. Navigate to the service folder
-      - name: Change directory to service
+      # 3. Change directory to the service folder
+      - name: Navigate to service
         run: cd ${{ matrix.service }}
 
       # 4. Make Maven wrapper executable
@@ -58,13 +58,10 @@ jobs:
       - name: Build and Test
         run: ./mvnw clean verify -B
 
-      # 7. Archive test reports (v4)
-      - name: Archive test reports
+      # 7. Upload test reports (v4)
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.service }}-test-report
-          path: ${{ matrix.service }}/target/surefire-reports/
-
-          name: ${{ matrix.service }}-test-report
-          path: ${{ matrix.service }}/target/surefire-reports/
+          path: ${{ matrix.service }}/target/surefire-reports
