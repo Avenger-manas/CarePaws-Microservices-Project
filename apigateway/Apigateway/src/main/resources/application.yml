@@ -1,0 +1,37 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: API_GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: NGO-SERVICE
+          uri: lb://CAREPAWS-NGO-SERVICE
+          predicates:
+            - Path=/ngo/**
+
+        - id: MUNCIPAL-SERVICE
+          uri: lb://MUNCIPAL-SERVICE
+          predicates:
+            - Path=/muncipal-register/**
+
+        - id: REPORT-SERVICE
+          uri: lb://REPORT-SERVICE
+          predicates:
+            - Path=/report/**
+
+
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret: AJD73hd92JSHD73js822HHD9283HDHSJs992k1234567890
