@@ -17,7 +17,7 @@ jobs:
         service: [
           "ngo-service",
           "muncipal-service",
-          "report-service",
+          "Report-Service",
           "apigateway",
           "carepaws",
           "notification-service",
