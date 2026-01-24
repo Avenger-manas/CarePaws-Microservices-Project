@@ -1,58 +1,69 @@
-name: CarePaws CI Pipeline
+name: CI Build & Test
 
+# Trigger this workflow on push or pull request
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-docker:
+  build-and-test:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        service: [
+          "ngo-service",
+          "muncipal-service",
+          "report-service",
+          "apigateway",
+          "carepaws",
+          "notification-service",
+          "eureka-server"
+        ]
+    name: Build & Test ${{ matrix.service }}
+    
     steps:
-      # 1. Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # 1. Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # 2. Setup Java 17 and Maven
-      - name: Setup Java 17 and Maven
-        uses: actions/setup-java@v4
+      # 2. Setup Java
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: '17'
-          cache: maven
+          java-version: 17
 
-      # 3. Debug root folder (optional)
-      - name: Debug root folder
-        run: pwd && ls -la
+      # 3. Navigate to the service folder
+      - name: Change directory to service
+        run: cd ${{ matrix.service }}
 
-      # 4. Build all microservices from root POM
-      - name: Build Maven projects
-        working-directory: .
-        run: mvn clean package -DskipTests
+      # 4. Make Maven wrapper executable (if not already)
+      - name: Make Maven wrapper executable
+        run: chmod +x mvnw
 
-      # 5. Build Docker images for each service
-      - name: Build Docker images
-        run: |
-          services=(carepaws apigateway eureka-server notification-service muncipal-service Report-Service ngo-service/NGO-SERVICE)
-          for service in "${services[@]}"; do
-            IMAGE_NAME=carepaws-$(echo "$service" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
-            echo "Building Docker image for $service → $IMAGE_NAME:latest"
-            docker build -t $IMAGE_NAME:latest "$service"
-          done
+      # 5. Cache Maven dependencies for faster builds
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.m2/repository
+            **/target
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-      # 6. Optional: Push to Docker Hub
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v2
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-      #
-      # - name: Push Docker images
-      #   run: |
-      #     services=(carepaws apigateway eureka-server notification-service muncipal-service Report-Service ngo-service/NGO-SERVICE)
-      #     for service in "${services[@]}"; do
-      #       IMAGE_NAME=carepaws-$(echo "$service" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
-      #       docker push $IMAGE_NAME:latest
-      #     done
+      # 6. Build & run tests
+      - name: Build and Test
+        run: ./mvnw clean verify -B
+
+      # 7. Archive test reports
+      - name: Archive test reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.service }}-test-report
+          path: ${{ matrix.service }}/target/surefire-reports/
