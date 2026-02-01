@@ -2,7 +2,6 @@ spring:
   application:
     name: CAREPAWS-NGO-SERVICE
 
-
   data:
     mongodb:
       uri: mongodb+srv://rastogimanas329:Ys54a4sUZbZpCxhP@cluster0.vl8euvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
@@ -14,31 +13,28 @@ internal:
 
 management:
   endpoints:
-  web:
-  exposure:
-  include: health,info
+    web:
+      exposure:
+        include: health,info
 
-
-  eureka:
+eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-    defaultZone: http://localhost:8761/eureka
-
-
+      defaultZone: http://eureka-server:8761/eureka
 
 resilience4j:
-    retry:
-      instances:
-        ngoRetry:
-          maxAttempts: 3
-          waitDuration: 300ms
+  retry:
+    instances:
+      ngoRetry:
+        maxAttempts: 3
+        waitDuration: 300ms
 
-circuitbreaker:
-      instances:
-        ngoCB:
-          failureRateThreshold: 50
-          slidingWindowSize: 10
-          minimumNumberOfCalls: 5
-          waitDurationInOpenState: 15s
+  circuitbreaker:
+    instances:
+      ngoCB:
+        failureRateThreshold: 50
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 15s
