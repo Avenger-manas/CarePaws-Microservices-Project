@@ -1,20 +1,18 @@
 package dolpi.Report_Service.Service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import dolpi.Report_Service.Dto.Notificationmessage;
 import dolpi.Report_Service.Dto.ReportDTO;
 import dolpi.Report_Service.Entity.ReportEntity;
 import dolpi.Report_Service.Repository.ReportRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 
 @Service
@@ -27,17 +25,31 @@ public class ReportService {
     @Autowired
     private NotificationProducer notificationProducer;
 
-    //this method report save user report in db
-    public String report(ReportDTO reportDTO, MultipartFile File)throws IOException {
-        String folder="uploads/";
-        String filename=System.currentTimeMillis() + "..." + File.getOriginalFilename();
-        Path path= Paths.get(folder + filename);
+    @Autowired
+    private AmazonS3 s3Client; // Make sure this bean is configured
 
-        Files.createDirectories(path.getParent());
-        Files.write(path,File.getBytes());
+    private final String bucketName = "dolpi-reports-bucket"; // create this bucket in AWS S3
 
-        ReportEntity report=new ReportEntity();
+   
+     // Save report in DB and upload image to AWS S3
+     
+    public String report(ReportDTO reportDTO, MultipartFile file) throws IOException {
 
+        // Generate unique file name
+        String keyName = System.currentTimeMillis() + "..." + file.getOriginalFilename();
+
+        // Upload to S3
+        try (InputStream is = file.getInputStream()) {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            s3Client.putObject(bucketName, keyName, is, metadata);
+        } catch (Exception e) {
+            log.error("Failed to upload file to S3", e);
+            throw new IOException("File upload failed");
+        }
+
+        // Save report entity in DB
+        ReportEntity report = new ReportEntity();
         report.setUserid(reportDTO.getUserid());
         report.setName(reportDTO.getName());
         report.setLocation_address(reportDTO.getLocation_address());
@@ -45,16 +57,16 @@ public class ReportService {
         report.setDescription(reportDTO.getDescription());
         report.setPincode(reportDTO.getPincode());
         report.setMobilenumber(reportDTO.getMobilenumber());
-        report.setImagepath(filename);
+        report.setImagepath(keyName); // store S3 key, not local path
         report.setCreatedAt(LocalDateTime.now());
 
-        log.info("save report");
         reportRepository.save(report);
 
-        //send to the producer
-        log.info("notification send");
-        notificationProducer.send(new Notificationmessage(report.getId(),report.getCity()));
+        // Send notification via RabbitMQ
+        notificationProducer.send(new Notificationmessage(report.getId(), report.getCity()));
 
-        return "Succesfully save wait few minutes";
+        log.info("Report saved and notification sent for report id {}", report.getId());
+
+        return "Successfully saved, please wait a few minutes.";
     }
 }
