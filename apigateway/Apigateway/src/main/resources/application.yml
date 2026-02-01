@@ -23,15 +23,12 @@ spring:
           predicates:
             - Path=/report/**
 
-
-
-
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
 
 jwt:
   secret: AJD73hd92JSHD73js822HHD9283HDHSJs992k1234567890
