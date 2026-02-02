@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
 
   municipal-service:
-    build: ./muncipal-service  # GitHub mein spelling 'muncipal' hai
+    build: ./muncipal-service  # Folder name has no 'i' as per your GitHub
     container_name: municipal-service
     ports:
       - "8083:8083"
@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
 
   ngo-service:
-    build: ./ngo-service/NGO-SERVICE # GitHub mein nested structure hai
+    build: ./ngo-service/NGO-SERVICE # Using the nested folder structure from GitHub
     container_name: ngo-service
     ports:
       - "8084:8084"
@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
 
   report-service:
-    build: ./Report-Service # GitHub mein R aur S capital hain
+    build: ./Report-Service # FIXED: Capital R and S to match GitHub
     container_name: report-service
     ports:
       - "8086:8086"
