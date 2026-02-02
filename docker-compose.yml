@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
 
   municipal-service:
-    build: ./muncipal-service  # GitHub ke mutabiq 'i' missing hai
+    build: ./muncipal-service  # GitHub ke mutabiq spelling 'muncipal' (no 'i') hai
     container_name: municipal-service
     ports:
       - "8083:8083"
@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
 
   ngo-service:
-    build: ./ngo-service/NGO-SERVICE # GitHub par nested folder hai
+    build: ./ngo-service/NGO-SERVICE # GitHub par folder ke andar folder hai
     container_name: ngo-service
     ports:
       - "8084:8084"
@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
 
   report-service:
-    build: ./Report-Service # FIXED: R aur S Capital hai
+    build: ./Report-Service # FIXED: Capital 'R' aur 'S' lagaya hai
     container_name: report-service
     ports:
       - "8086:8086"
