@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
 
   municipal-service:
-    build: ./muncipal-service  # GitHub ke mutabiq spelling 'muncipal' (no 'i') hai
+    build: ./muncipal-service  # GitHub ke mutabiq 'muncipal' (no 'i')
     container_name: municipal-service
     ports:
       - "8083:8083"
@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
 
   ngo-service:
-    build: ./ngo-service/NGO-SERVICE # GitHub par folder ke andar folder hai
+    build: ./ngo-service/NGO-SERVICE # GitHub par nested path hai
     container_name: ngo-service
     ports:
       - "8084:8084"
