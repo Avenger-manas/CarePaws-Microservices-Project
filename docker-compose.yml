@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
 
   eureka-server:
-    build: ./eureka-server
+    build: ./eureka-server/EurekaServer-Pawscare
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   apigateway:
-    build: ./apigateway
+    build: ./apigateway/Apigateway
     container_name: apigateway
     ports:
       - "8081:8081"
@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   carepaws:
-    build: ./carepaws
+    build: ./carepaws/CarePaws
     container_name: carepaws
     ports:
       - "8082:8082"
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
 
   municipal-service:
-    build: ./muncipal-service  # GitHub ke mutabiq 'muncipal' (no 'i')
+    build: ./muncipal-service/Muncipal-Service
     container_name: municipal-service
     ports:
       - "8083:8083"
@@ -53,7 +53,7 @@ services:
     restart: unless-stopped
 
   ngo-service:
-    build: ./ngo-service/NGO-SERVICE # GitHub par nested path hai
+    build: ./ngo-service/NGO-SERVICE/NGO-SERVICE
     container_name: ngo-service
     ports:
       - "8084:8084"
@@ -64,7 +64,7 @@ services:
     restart: unless-stopped
 
   notification-service:
-    build: ./notification-service
+    build: ./notification-service/Notification-Service
     container_name: notification-service
     ports:
       - "8085:8085"
@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
 
   report-service:
-    build: ./Report-Service # FIXED: Capital 'R' aur 'S' lagaya hai
+    build: ./Report-Service
     container_name: report-service
     ports:
       - "8086:8086"
