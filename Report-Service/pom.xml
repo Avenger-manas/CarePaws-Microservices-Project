@@ -80,6 +80,12 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+             <dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-java-sdk-s3</artifactId>
+    <version>1.12.500</version>
+</dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
