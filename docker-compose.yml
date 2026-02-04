@@ -8,16 +8,81 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    deploy:
+      resources:
+        limits:
+          memory: 150M
+    restart: unless-stopped
+
+  eureka-server:
+    build: ./eureka-server/EurekaServer-Pawscare
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+    restart: unless-stopped
+
+  apigateway:
+    build: ./apigateway/Apigateway
+    container_name: apigateway
+    ports:
+      - "8081:8081"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_ENABLED=false
     restart: unless-stopped
 
   carepaws:
     build: ./carepaws/CarePaws
     container_name: carepaws
     ports:
-      - "8082:8081"  # Bahar se 8082 hit karein, ye andar 8081 (Tomcat) par bhejega
+      - "8082:8081"  # Bahar 8082, andar Tomcat 8081
     environment:
-      - JAVA_OPTS=-Xms128m -Xmx256m  # RAM limit set ki hai
-      - EUREKA_CLIENT_ENABLED=false   # Eureka bypass kiya taaki jaldi start ho
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_ENABLED=false
     restart: unless-stopped
 
-  # Note: Baaki services ko abhi band rakhein taaki RAM crash na ho.
+  municipal-service:
+    build: ./muncipal-service/Muncipal-Service
+    container_name: municipal-service
+    ports:
+      - "8083:8083"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_ENABLED=false
+    restart: unless-stopped
+
+  ngo-service:
+    build: ./ngo-service/NGO-SERVICE/NGO-SERVICE
+    container_name: ngo-service
+    ports:
+      - "8084:8084"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_ENABLED=false
+    restart: unless-stopped
+
+  notification-service:
+    build: ./notification-service/Notification-Service
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_ENABLED=false
+    restart: unless-stopped
+
+  report-service:
+    build: ./Report-Service
+    container_name: report-service
+    ports:
+      - "8086:8086"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_ENABLED=false
+    depends_on:
+      - rabbitmq
+    restart: unless-stopped
