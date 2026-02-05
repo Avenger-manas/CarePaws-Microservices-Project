@@ -27,7 +27,7 @@ services:
     build: ./apigateway/Apigateway
     container_name: apigateway
     ports:
-      - "8081:8081"
+      - "8081:8083"
     environment:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_ENABLED=true
