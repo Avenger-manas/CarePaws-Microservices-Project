@@ -30,17 +30,23 @@ services:
       - "8081:8081"
     environment:
       - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_ENABLED=false
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
     restart: unless-stopped
 
   carepaws:
     build: ./carepaws/CarePaws
     container_name: carepaws
     ports:
-      - "8082:8081"  # Bahar 8082, andar Tomcat 8081
+      - "8082:8081"
     environment:
       - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_ENABLED=false
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
     restart: unless-stopped
 
   municipal-service:
@@ -50,7 +56,10 @@ services:
       - "8083:8083"
     environment:
       - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_ENABLED=false
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
     restart: unless-stopped
 
   ngo-service:
@@ -60,7 +69,10 @@ services:
       - "8084:8084"
     environment:
       - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_ENABLED=false
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
     restart: unless-stopped
 
   notification-service:
@@ -70,7 +82,10 @@ services:
       - "8085:8085"
     environment:
       - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_ENABLED=false
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
     restart: unless-stopped
 
   report-service:
@@ -78,11 +93,15 @@ services:
     container_name: report-service
     ports:
       - "8086:8086"
+    volumes:
+      - ./report-images:/app/uploads  # Host images folder mapping
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
       - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_ENABLED=false
+      - EUREKA_CLIENT_ENABLED=true
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       - rabbitmq
+      - eureka-server
     restart: unless-stopped
