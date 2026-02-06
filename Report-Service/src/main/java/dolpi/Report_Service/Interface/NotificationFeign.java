@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name="CAREPAWS-NOTIFICATION-SERVICE",url = "http://localhost:8086")
+@FeignClient(name="CAREPAWS-NOTIFICATION-SERVICE")
 public interface NotificationFeign {
     @PostMapping("/save/save-notification")
     void savenotification(@RequestBody Notifiaction notification);
