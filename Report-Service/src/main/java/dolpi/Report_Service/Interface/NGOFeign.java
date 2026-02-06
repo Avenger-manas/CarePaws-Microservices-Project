@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name="CAREPAWS-NGO-SERVICE",url = "http://localhost:8080")
+@FeignClient(name="CAREPAWS-NGO-SERVICE")
 public interface NGOFeign {
     @GetMapping("/find/getCity")
     List<RegisterNgo> getNGO(@RequestParam String city);
