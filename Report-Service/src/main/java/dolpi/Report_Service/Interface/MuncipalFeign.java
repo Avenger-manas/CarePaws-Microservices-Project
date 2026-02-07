@@ -9,6 +9,6 @@ import java.util.List;
 
 @FeignClient(name="CAREPAWS-MUNCIPAL-SERVICE")
 public interface MuncipalFeign {
-    @GetMapping("/find/getCity")
+    @GetMapping("/find/getcity")
     List<RegisterEntity> getmunciapl(@RequestParam String city);
 }
