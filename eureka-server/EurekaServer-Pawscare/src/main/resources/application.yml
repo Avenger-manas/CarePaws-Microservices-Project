@@ -1,19 +1,6 @@
-server:
-  port: 8761
-
-spring:
-  application:
-    name: eureka-server-pawscare
-
-eureka:
-  instance:
-    hostname: eureka-server # Docker container ka naam
-    prefer-ip-address: true
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      defaultZone: http://eureka-server:8761/eureka/
-  server:
-    enable-self-preservation: false 
-    wait-time-in-ms-when-sync-empty: 0
+eureka-server:
+  image: carepaws-microservices-project-eureka-server
+  container_name: eureka-server
+  ports:
+    - "8761:8761"
+  restart: always
