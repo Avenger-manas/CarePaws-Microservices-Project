@@ -96,19 +96,24 @@ services:
   report-service:
     build: ./Report-Service
     container_name: report-service
-    user: root  # Permission fix for image upload
+    user: root  # Permissions fix for Linux
     ports:
       - "8086:8086"
     volumes:
-      - ./report-images:/app/uploads  # Mapping for image storage
+      - ./report-images:/app/uploads
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
-      - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      # SIZE LIMIT FIX
+      - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
+      - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
+      # UPLOAD PATH FIX
+      - FILE_UPLOAD_DIR=/app/uploads
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
       eureka-server:
-        condition: service_healthy # Wait for Eureka to be READY
+        condition: service_healthy
       rabbitmq:
         condition: service_started
     restart: unless-stopped
