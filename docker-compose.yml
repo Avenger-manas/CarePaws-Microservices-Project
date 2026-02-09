@@ -35,9 +35,10 @@ services:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy # Gateway tabhi chalega jab Eureka ready hoga
     restart: unless-stopped
-
+    
   report-service:
     build: ./Report-Service
     container_name: report-service
