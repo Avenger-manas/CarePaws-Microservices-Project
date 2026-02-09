@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -20,6 +19,13 @@ services:
       - "8761:8761"
     environment:
       - JAVA_OPTS=-Xms128m -Xmx256m
+    # FIX: Isse Eureka unhealthy nahi hoga
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   apigateway:
@@ -31,55 +37,8 @@ services:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-      - eureka-server
-    restart: unless-stopped
-
-  carepaws:
-    build: ./carepaws/CarePaws
-    container_name: carepaws
-    ports:
-      - "8082:8081"
-    environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-    depends_on:
-      - eureka-server
-    restart: unless-stopped
-
-  municipal-service:
-    build: ./muncipal-service/Muncipal-Service
-    container_name: municipal-service
-    ports:
-      - "8083:8083"
-    environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-    depends_on:
-      - eureka-server
-    restart: unless-stopped
-
-  ngo-service:
-    build: ./ngo-service/NGO-SERVICE/NGO-SERVICE
-    container_name: ngo-service
-    ports:
-      - "8084:8084"
-    environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-    depends_on:
-      - eureka-server
-    restart: unless-stopped
-
-  notification-service:
-    build: ./notification-service/Notification-Service
-    container_name: notification-service
-    ports:
-      - "8085:8085"
-    environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-    depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   report-service:
@@ -94,11 +53,66 @@ services:
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      # FIX: Image Upload Limits
       - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
       - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
       - FILE_UPLOAD_DIR=/app/uploads
       - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
-      - rabbitmq
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    restart: unless-stopped
+
+  carepaws:
+    build: ./carepaws/CarePaws
+    container_name: carepaws
+    ports:
+      - "8082:8081"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  municipal-service:
+    build: ./muncipal-service/Muncipal-Service
+    container_name: municipal-service
+    ports:
+      - "8083:8083"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ngo-service:
+    build: ./ngo-service/NGO-SERVICE/NGO-SERVICE
+    container_name: ngo-service
+    ports:
+      - "8084:8084"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  notification-service:
+    build: ./notification-service/Notification-Service
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
