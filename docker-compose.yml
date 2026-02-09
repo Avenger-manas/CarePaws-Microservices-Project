@@ -19,7 +19,6 @@ services:
       - "8761:8761"
     environment:
       - JAVA_OPTS=-Xms128m -Xmx256m
-    # Sirf check karne ke liye ki port up hai
     healthcheck:
       test: ["CMD-SHELL", "netstat -an | grep 8761 || exit 1"]
       interval: 30s
@@ -52,6 +51,11 @@ services:
       - SPRING_RABBITMQ_PORT=5672
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - JAVA_OPTS=-Xms64m -Xmx128m
+      # --- FIXES START HERE ---
+      - FILE_UPLOAD_DIR=/app/uploads
+      - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
+      - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
+      # ------------------------
     depends_on:
       - eureka-server
       - rabbitmq
