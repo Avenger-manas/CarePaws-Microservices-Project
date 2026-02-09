@@ -20,10 +20,10 @@ services:
     environment:
       - JAVA_OPTS=-Xms128m -Xmx256m
     healthcheck:
-      test: ["CMD-SHELL", "netstat -an | grep 8761 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/eureka/apps || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     restart: unless-stopped
 
   apigateway:
@@ -32,10 +32,12 @@ services:
     ports:
       - "8081:8083"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
+      - SPRING_APPLICATION_NAME=API_GATEWAY
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   report-service:
@@ -47,18 +49,19 @@ services:
     volumes:
       - ./report-images:/app/uploads
     environment:
+      - SPRING_APPLICATION_NAME=REPORT-SERVICE
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - JAVA_OPTS=-Xms64m -Xmx128m
-      # --- FIXES START HERE ---
       - FILE_UPLOAD_DIR=/app/uploads
       - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
       - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
-      # ------------------------
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
-      - rabbitmq
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
     restart: unless-stopped
 
   carepaws:
@@ -67,10 +70,12 @@ services:
     ports:
       - "8082:8081"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
+      - SPRING_APPLICATION_NAME=CAREPAWS-SERVICE
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   municipal-service:
@@ -79,10 +84,12 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
+      - SPRING_APPLICATION_NAME=MUNCIPAL-SERVICE
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   ngo-service:
@@ -91,10 +98,12 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
+      - SPRING_APPLICATION_NAME=CAREPAWS-NGO-SERVICE
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   notification-service:
@@ -103,8 +112,10 @@ services:
     ports:
       - "8085:8085"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
+      - SPRING_APPLICATION_NAME=NOTIFICATION-SERVICE
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JAVA_OPTS=-Xms64m -Xmx128m
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
