@@ -1,7 +1,11 @@
-services:
-  eureka-server:
-    image: carepaws-microservices-project-eureka-server
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-    restart: always
+server: 
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
