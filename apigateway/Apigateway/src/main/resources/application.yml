@@ -6,23 +6,19 @@ spring:
     name: API_GATEWAY
   cloud:
     gateway:
-      # Isse gateway ko Eureka se services ki metadata milti hai
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
       routes:
         - id: NGO-SERVICE
-          # Yeh ensure karein ki NGO service ka spring.application.name yahi hai
           uri: lb://CAREPAWS-NGO-SERVICE
           predicates:
             - Path=/ngo/**
-
         - id: MUNCIPAL-SERVICE
           uri: lb://MUNCIPAL-SERVICE
           predicates:
             - Path=/muncipal-register/**
-
         - id: REPORT-SERVICE
           uri: lb://REPORT-SERVICE
           predicates:
@@ -30,17 +26,13 @@ spring:
 
 eureka:
   instance:
-    # Docker containers ke liye IP address prefer karna sabse safe hota hai
     prefer-ip-address: true
-    # Logs mein jo a4bbd4e... dikh raha tha, usse clean karne ke liye:
     instance-id: ${spring.application.name}:${random.value}
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      # Docker-compose mein service name 'eureka-server' hai, isliye yahan wahi use hoga
       defaultZone: http://eureka-server:8761/eureka/
 
-# Security (JWT) - Ensure your secret is long enough for HS256
 jwt:
   secret: AJD73hd92JSHD73js822HHD9283HDHSJs992k1234567890
