@@ -3,8 +3,7 @@ server:
 
 spring:
   application:
-    name: NOTIFICATION-SERVICE
-
+    name: REPORT-SERVICE
   data:
     mongodb:
       uri: mongodb+srv://rastogimanas329:Ys54a4sUZbZpCxhP@cluster0.vl8euvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
