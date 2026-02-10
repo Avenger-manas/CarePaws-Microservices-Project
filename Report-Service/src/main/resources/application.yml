@@ -8,10 +8,17 @@ spring:
     mongodb:
       uri: mongodb+srv://rastogimanas329:Ys54a4sUZbZpCxhP@cluster0.vl8euvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: carepaws-report-service
+  
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: dolpi
+    password: dolpi123
 
 internal:
   service:
     token: INTERNAl-NGO-AND-MUNICIPAL-SERVICE-TOKEN
+    
 
 rabbitmq:
   host: rabbitmq
