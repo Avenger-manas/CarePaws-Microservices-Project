@@ -32,6 +32,8 @@ public class ReportController {
             throw new ResourcesNotFound("Not Found");
         }
 
+        return new ResponseEntity<>("MAN ARE BRAVE",HttpStatus.OK);
+
         //json string convert reportDTO
 
         ObjectMapper mapper=new ObjectMapper();
