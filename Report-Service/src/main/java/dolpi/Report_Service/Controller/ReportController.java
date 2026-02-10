@@ -32,17 +32,17 @@ public class ReportController {
             throw new ResourcesNotFound("Not Found");
         }
 
-        return new ResponseEntity<>("MAN ARE BRAVE",HttpStatus.OK);
+    
 
         //json string convert reportDTO
 
         ObjectMapper mapper=new ObjectMapper();
         ReportDTO reportDTO=mapper.readValue(reportdto,ReportDTO.class);
 
+//reportService.report(reportDTO,File)
 
 
-
-        return new ResponseEntity<>(reportService.report(reportDTO,File),HttpStatus.OK);
+        return new ResponseEntity<>("MAN ARE BRAVE",HttpStatus.OK);
 
     }
 
