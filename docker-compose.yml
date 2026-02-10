@@ -50,6 +50,8 @@ services:
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=dolpi        # Fixed
+      - SPRING_RABBITMQ_PASSWORD=dolpi123      # Fixed
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - JAVA_OPTS=-Xms64m -Xmx128m
       - FILE_UPLOAD_DIR=/app/uploads
