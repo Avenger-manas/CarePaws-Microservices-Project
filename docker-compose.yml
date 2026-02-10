@@ -19,8 +19,11 @@ services:
       - "8761:8761"
     environment:
       - JAVA_OPTS=-Xms128m -Xmx256m
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+      - EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
     healthcheck:
-      test: ["CMD-SHELL", "netstat -an | grep 8761 || exit 1"]
+      test: ["CMD-SHELL", "cat < /dev/tcp/127.0.0.1/8761 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -32,13 +35,14 @@ services:
     ports:
       - "8081:8083"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_INSTANCE_ID=apigateway:${random.value}
     depends_on:
       eureka-server:
         condition: service_healthy
     restart: unless-stopped
-    
+
   report-service:
     build: ./Report-Service
     container_name: report-service
@@ -48,20 +52,19 @@ services:
     volumes:
       - ./report-images:/app/uploads
     environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_INSTANCE_ID=report-service:${random.value}
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
-      - SPRING_RABBITMQ_USERNAME=dolpi        # Fixed
-      - SPRING_RABBITMQ_PASSWORD=dolpi123      # Fixed
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - JAVA_OPTS=-Xms64m -Xmx128m
+      - SPRING_RABBITMQ_USERNAME=dolpi
+      - SPRING_RABBITMQ_PASSWORD=dolpi123
       - FILE_UPLOAD_DIR=/app/uploads
-      - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
-      - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
     depends_on:
-      rabbitmq:
-        condition: service_started
       eureka-server:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
     restart: unless-stopped
 
   carepaws:
@@ -70,8 +73,9 @@ services:
     ports:
       - "8082:8081"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_INSTANCE_ID=carepaws:${random.value}
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -83,8 +87,9 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_INSTANCE_ID=municipal-service:${random.value}
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -96,8 +101,9 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_INSTANCE_ID=ngo-service:${random.value}
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -109,8 +115,9 @@ services:
     ports:
       - "8085:8085"
     environment:
-      - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_INSTANCE_ID=notification-service:${random.value}
     depends_on:
       eureka-server:
         condition: service_healthy
