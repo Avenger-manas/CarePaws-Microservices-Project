@@ -8,8 +8,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: dolpi
+      RABBITMQ_DEFAULT_PASS: dolpi123
     restart: unless-stopped
 
   eureka-server:
@@ -21,9 +21,9 @@ services:
       - JAVA_OPTS=-Xms128m -Xmx256m
     healthcheck:
       test: ["CMD-SHELL", "netstat -an | grep 8761 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      interval: 10s
+      timeout: 5s
+      retries: 10
     restart: unless-stopped
 
   apigateway:
@@ -36,7 +36,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       eureka-server:
-        condition: service_healthy # Gateway tabhi chalega jab Eureka ready hoga
+        condition: service_healthy
     restart: unless-stopped
     
   report-service:
@@ -52,14 +52,14 @@ services:
       - SPRING_RABBITMQ_PORT=5672
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - JAVA_OPTS=-Xms64m -Xmx128m
-      # --- FIXES START HERE ---
       - FILE_UPLOAD_DIR=/app/uploads
       - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
       - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
-      # ------------------------
     depends_on:
-      - eureka-server
-      - rabbitmq
+      rabbitmq:
+        condition: service_started
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   carepaws:
@@ -71,7 +71,8 @@ services:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   municipal-service:
@@ -83,7 +84,8 @@ services:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   ngo-service:
@@ -95,7 +97,8 @@ services:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
 
   notification-service:
@@ -107,5 +110,6 @@ services:
       - JAVA_OPTS=-Xms64m -Xmx128m
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     restart: unless-stopped
