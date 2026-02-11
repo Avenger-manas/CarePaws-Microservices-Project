@@ -15,15 +15,13 @@ server:
 
 eureka:
   instance:
-    # AWS ki Public IP ya Private IP yahan mention karein
-    hostname: 13.60.184.171
+    hostname: eureka-server
     prefer-ip-address: true
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://13.60.184.171:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
   server:
-    # Replication timeout errors ko rokne ke liye
     peer-node-read-timeout-ms: 5000
     enable-self-preservation: true
