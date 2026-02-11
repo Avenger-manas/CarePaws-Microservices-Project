@@ -36,7 +36,8 @@ spring:
             - Path=/muncipal-register/**
             
         - id: REPORT-SERVICE
-          uri: lb://report-service # Fix: Lowercase matching
+          # FIX: Ise uppercase karein taaki ye service name se match kare
+          uri: lb://REPORT-SERVICE 
           predicates:
             - Path=/report/**
 
