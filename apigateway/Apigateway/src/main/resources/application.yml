@@ -4,28 +4,45 @@ server:
 spring:
   application:
     name: API_GATEWAY
+  
+  # FIX 1: Multipart settings taaki image upload ho sake
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   cloud:
     gateway:
+      # FIX 2: Timeout badha diya taaki 503 error na aaye
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 60s
+      
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
+      
       routes:
         - id: NGO-SERVICE
-          uri: lb://CAREPAWS-NGO-SERVICE
+          uri: lb://carepaws-ngo-service # Lowercase kiya kyuki locator enabled hai
           predicates:
             - Path=/ngo/**
+            
         - id: MUNCIPAL-SERVICE
-          uri: lb://MUNCIPAL-SERVICE
+          uri: lb://muncipal-service
           predicates:
             - Path=/muncipal-register/**
+            
         - id: REPORT-SERVICE
-          uri: lb://REPORT-SERVICE
+          uri: lb://report-service # Fix: Lowercase matching
           predicates:
             - Path=/report/**
 
 eureka:
   instance:
+    # FIX 3: Docker environment ke liye zaroori settings
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${random.value}
   client:
