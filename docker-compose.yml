@@ -22,13 +22,7 @@ services:
       - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
       - EUREKA_CLIENT_FETCH_REGISTRY=false
       - EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
-    healthcheck:
-      # Is command se curl ki zarurat nahi padegi, ye direct TCP connection check karega
-      test: ["CMD-SHELL", "timeout 1s bash -c ':> /dev/tcp/127.0.0.1/8761' || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 6
-      start_period: 60s
+    # Healthcheck hata diya hai taaki ye block na kare
     restart: unless-stopped
 
   apigateway:
@@ -41,8 +35,7 @@ services:
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_INSTANCE_ID=apigateway:$${random.value}
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
     restart: unless-stopped
 
   report-service:
@@ -63,10 +56,8 @@ services:
       - SPRING_RABBITMQ_PASSWORD=dolpi123
       - FILE_UPLOAD_DIR=/app/uploads
     depends_on:
-      eureka-server:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_started
+      - eureka-server
+      - rabbitmq
     restart: unless-stopped
 
   carepaws:
@@ -79,8 +70,7 @@ services:
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_INSTANCE_ID=carepaws:$${random.value}
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
     restart: unless-stopped
 
   municipal-service:
@@ -93,8 +83,7 @@ services:
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_INSTANCE_ID=municipal-service:$${random.value}
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
     restart: unless-stopped
 
   ngo-service:
@@ -107,8 +96,7 @@ services:
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_INSTANCE_ID=ngo-service:$${random.value}
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
     restart: unless-stopped
 
   notification-service:
@@ -121,6 +109,5 @@ services:
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_INSTANCE_ID=notification-service:$${random.value}
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
     restart: unless-stopped
