@@ -22,12 +22,12 @@ import java.time.LocalDateTime;
 @RequestMapping("/report")
 public class ReportController {
     //this is used to the report near by ngo and muncipal organization
-
+// @RequestParam("File") MultipartFile File
     @Autowired
     private ReportService reportService;
 //@RequestHeader("X-USERNAME") String username, @RequestHeader("X-ROLE") String roles,@RequestHeader(value = "X-GATEWAY", required = true) String gateway,
     @PostMapping("/complaint")
-    public ResponseEntity<?> reportngomuncipal(@RequestParam("report") String reportdto, @RequestParam("File") MultipartFile File)throws IOException {
+    public ResponseEntity<?> reportngomuncipal(@RequestParam("report") String reportdto)throws IOException {
         // if (!roles.equals("ROLE_USER")) {
         //     throw new ResourcesNotFound("Not Found");
         // }
