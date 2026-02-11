@@ -5,7 +5,7 @@ spring:
   application:
     name: REPORT-SERVICE
   
-  # FILE UPLOAD FIX: Added here
+  # FILE UPLOAD FIX: Proper indentation and limits
   servlet:
     multipart:
       enabled: true
@@ -18,7 +18,7 @@ spring:
       database: carepaws-report-service
   
   rabbitmq:
-    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    host: ${SPRING_RABBITMQ_HOST:13.60.184.171} # IP updated for connectivity
     port: ${SPRING_RABBITMQ_PORT:5672}
     username: ${SPRING_RABBITMQ_USERNAME:dolpi}
     password: ${SPRING_RABBITMQ_PASSWORD:dolpi123}
@@ -30,11 +30,14 @@ internal:
 eureka:
   instance:
     prefer-ip-address: true
+    # Added instance-id to avoid registration conflicts
+    instance-id: ${spring.application.name}:${random.value}
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      # FIX: eureka-server ki jagah direct IP use kar rahe hain
+      defaultZone: http://13.60.184.171:8761/eureka/
 
 resilience4j:
   retry:
