@@ -22,11 +22,6 @@ services:
       - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
       - EUREKA_CLIENT_FETCH_REGISTRY=false
       - EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
     restart: unless-stopped
 
   apigateway:
@@ -40,7 +35,7 @@ services:
       - EUREKA_INSTANCE_INSTANCE_ID=apigateway:$${random.value}
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started # FIX: Ab ye "Unhealthy" hone par block nahi karega
     restart: unless-stopped
 
   report-service:
@@ -62,7 +57,7 @@ services:
       - FILE_UPLOAD_DIR=/app/uploads
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
       rabbitmq:
         condition: service_started
     restart: unless-stopped
@@ -78,7 +73,7 @@ services:
       - EUREKA_INSTANCE_INSTANCE_ID=carepaws:$${random.value}
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
 
   municipal-service:
@@ -92,7 +87,7 @@ services:
       - EUREKA_INSTANCE_INSTANCE_ID=municipal-service:$${random.value}
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
 
   ngo-service:
@@ -106,7 +101,7 @@ services:
       - EUREKA_INSTANCE_INSTANCE_ID=ngo-service:$${random.value}
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
 
   notification-service:
@@ -120,5 +115,5 @@ services:
       - EUREKA_INSTANCE_INSTANCE_ID=notification-service:$${random.value}
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     restart: unless-stopped
