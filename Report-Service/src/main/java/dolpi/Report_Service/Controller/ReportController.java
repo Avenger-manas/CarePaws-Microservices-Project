@@ -27,10 +27,10 @@ public class ReportController {
     private ReportService reportService;
 //@RequestHeader("X-USERNAME") String username, @RequestHeader("X-ROLE") String roles,@RequestHeader(value = "X-GATEWAY", required = true) String gateway,
     @PostMapping("/complaint")
-    public ResponseEntity<?> reportngomuncipal(@RequestParam("report") String reportdto)throws IOException {
-        // if (!roles.equals("ROLE_USER")) {
-        //     throw new ResourcesNotFound("Not Found");
-        // }
+    public ResponseEntity<?> reportngomuncipal(@RequestHeader("X-USERNAME") String username, @RequestHeader("X-ROLE") String roles,@RequestHeader(value = "X-GATEWAY", required = true) String gateway,@RequestParam("report") String reportdto,@RequestParam("File") MultipartFile File)throws IOException {
+        if (!roles.equals("ROLE_USER")) {
+            throw new ResourcesNotFound("Not Found");
+        }
 
     
 
@@ -39,10 +39,10 @@ public class ReportController {
         ObjectMapper mapper=new ObjectMapper();
         ReportDTO reportDTO=mapper.readValue(reportdto,ReportDTO.class);
 
-//reportService.report(reportDTO,File)
+       reportService.report(reportDTO,File)
 
 
-        return new ResponseEntity<>("MAN ARE BRAVE",HttpStatus.OK);
+        return new ResponseEntity<>("Succesfully Uploated",HttpStatus.OK);
 
     }
 
