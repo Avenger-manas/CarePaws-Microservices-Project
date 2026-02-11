@@ -25,9 +25,9 @@ public class ReportController {
 
     @Autowired
     private ReportService reportService;
-
+//@RequestHeader("X-USERNAME") String username, @RequestHeader("X-ROLE") String roles,@RequestHeader(value = "X-GATEWAY", required = true) String gateway,
     @PostMapping("/complaint")
-    public ResponseEntity<?> reportngomuncipal(@RequestHeader("X-USERNAME") String username, @RequestHeader("X-ROLE") String roles,@RequestHeader(value = "X-GATEWAY", required = true) String gateway,@RequestParam("report") String reportdto, @RequestParam("File") MultipartFile File)throws IOException {
+    public ResponseEntity<?> reportngomuncipal(@RequestParam("report") String reportdto, @RequestParam("File") MultipartFile File)throws IOException {
         if (!roles.equals("ROLE_USER")) {
             throw new ResourcesNotFound("Not Found");
         }
