@@ -39,7 +39,7 @@ public class ReportController {
         ObjectMapper mapper=new ObjectMapper();
         ReportDTO reportDTO=mapper.readValue(reportdto,ReportDTO.class);
 
-       reportService.report(reportDTO,File)
+       reportService.report(reportDTO,File);
 
 
         return new ResponseEntity<>("Succesfully Uploated",HttpStatus.OK);
