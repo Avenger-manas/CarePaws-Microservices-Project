@@ -4,29 +4,32 @@ server:
 spring:
   application:
     name: REPORT-SERVICE
+  
+  # FILE UPLOAD FIX: Added here
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   data:
     mongodb:
       uri: mongodb+srv://rastogimanas329:Ys54a4sUZbZpCxhP@cluster0.vl8euvm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: carepaws-report-service
   
   rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: dolpi
-    password: dolpi123
+    host: ${SPRING_RABBITMQ_HOST:rabbitmq}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:dolpi}
+    password: ${SPRING_RABBITMQ_PASSWORD:dolpi123}
 
 internal:
   service:
     token: INTERNAl-NGO-AND-MUNICIPAL-SERVICE-TOKEN
-    
-
-rabbitmq:
-  host: rabbitmq
-  port: 5672
-  username: dolpi
-  password: dolpi123
 
 eureka:
+  instance:
+    prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
@@ -39,11 +42,9 @@ resilience4j:
       ngoRetry:
         maxAttempts: 3
         waitDuration: 300ms
-
       municipalRetry:
         maxAttempts: 3
         waitDuration: 300ms
-
       notificationRetry:
         maxAttempts: 3
         waitDuration: 300ms
@@ -55,13 +56,11 @@ resilience4j:
         slidingWindowSize: 10
         minimumNumberOfCalls: 5
         waitDurationInOpenState: 15s
-
       municipalCB:
         failureRateThreshold: 50
         slidingWindowSize: 10
         minimumNumberOfCalls: 5
         waitDurationInOpenState: 15s
-
       notificationCB:
         failureRateThreshold: 50
         slidingWindowSize: 10
