@@ -24,13 +24,11 @@ services:
       - EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
     restart: unless-stopped
     # FIX: Healthcheck zaroori hai taaki baki services ko pata chale Eureka kab ready hai
-    healthcheck:
-      test: ["CMD", "wait-for-it", "localhost:8761", "--", "echo", "eureka is up"]
+   healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 10
-
   apigateway:
     build: ./apigateway/Apigateway
     container_name: apigateway
