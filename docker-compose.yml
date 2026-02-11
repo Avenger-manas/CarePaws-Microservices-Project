@@ -22,13 +22,13 @@ services:
       - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
       - EUREKA_CLIENT_FETCH_REGISTRY=false
       - EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
-    restart: unless-stopped
-    # FIX: Healthcheck zaroori hai taaki baki services ko pata chale Eureka kab ready hai
-   healthcheck:
+    healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
+
   apigateway:
     build: ./apigateway/Apigateway
     container_name: apigateway
@@ -40,7 +40,7 @@ services:
       - EUREKA_INSTANCE_INSTANCE_ID=apigateway:$${random.value}
     depends_on:
       eureka-server:
-        condition: service_healthy # FIX: Connection Refused error yahan se solve hoga
+        condition: service_healthy
     restart: unless-stopped
 
   report-service:
