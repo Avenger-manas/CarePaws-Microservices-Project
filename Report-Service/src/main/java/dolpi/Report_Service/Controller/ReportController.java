@@ -36,8 +36,8 @@ public class ReportController {
 
         //json string convert reportDTO
 
-        // ObjectMapper mapper=new ObjectMapper();
-        // ReportDTO reportDTO=mapper.readValue(reportdto,ReportDTO.class);
+        ObjectMapper mapper=new ObjectMapper();
+        ReportDTO reportDTO=mapper.readValue(reportdto,ReportDTO.class);
 
 //reportService.report(reportDTO,File)
 
