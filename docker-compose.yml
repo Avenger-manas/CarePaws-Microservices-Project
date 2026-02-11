@@ -23,11 +23,12 @@ services:
       - EUREKA_CLIENT_FETCH_REGISTRY=false
       - EUREKA_SERVER_WAIT_TIME_IN_MS_WHEN_SYNC_EMPTY=0
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8761/eureka/ || exit 1"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+      # Is command se curl ki zarurat nahi padegi, ye direct TCP connection check karega
+      test: ["CMD-SHELL", "timeout 1s bash -c ':> /dev/tcp/127.0.0.1/8761' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
     restart: unless-stopped
 
   apigateway:
