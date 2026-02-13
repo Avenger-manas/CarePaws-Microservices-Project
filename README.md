@@ -169,7 +169,6 @@ docker-compose up --build
 * 🗺️ Live Google Maps Tracking
 * 📊 Admin Analytics Dashboard
 * 🔔 SMS / WhatsApp Alerts
-* ☁️ AWS Deployment (ECS / EKS)
 -----
 
 💡 Why This Project Matters
