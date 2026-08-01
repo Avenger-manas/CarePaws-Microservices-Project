@@ -22,7 +22,7 @@
 ## 🚨 The Problem
 ---------------------------------------------------
 Every day, stray animals are injured on city roads. The current system fails them:
-
+---------------------------------------------------
 - ❌ No centralized platform to report animal emergencies
 - ❌ No direct communication channel between citizens, NGOs, and municipal authorities
 - ❌ Manual phone calls and forwarding waste critical response time
