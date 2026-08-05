@@ -64,6 +64,7 @@ A **microservices-based emergency response platform** that creates a unified dig
                                           NGOs   Municipal
 ```
 ---------------------------------------------------
+---------------------------------------------------
 ```mermaid
 graph LR
     User -->|Request| GW[API Gateway]
