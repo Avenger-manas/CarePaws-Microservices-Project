@@ -226,6 +226,7 @@ Each microservice runs in its own isolated container:
 
 ## 🤝 Contributing
 ---------------------------------------------------
+---------------------------------------------------
 Contributions are welcome and appreciated!
 
 1. Fork the repository
