@@ -117,6 +117,7 @@ OAuth2-based authentication with JWT token authorization and Role-Based Access C
 
 ## 🧩 Microservices Breakdown
 ---------------------------------------------------
+---------------------------------------------------
 <details>
 <summary><b>1️⃣ API Gateway Service</b></summary>
 
