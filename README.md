@@ -35,7 +35,7 @@ Every day, stray animals are injured on city roads. The current system fails the
 ## ✅ The Solution
 ---------------------------------------------------
 A **microservices-based emergency response platform** that creates a unified digital ecosystem:
-
+---------------------------------------------------
 | Who | What they can do |
 |-----|-----------------|
 | 👤 **Citizens** | Instantly report an injured stray animal with photos and location |
