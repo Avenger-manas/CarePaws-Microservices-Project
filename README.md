@@ -261,7 +261,7 @@ Contributions are welcome and appreciated!
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 <div align="center">
-
+---------------------------------------------------
 ⭐ **If this project resonates with you, please give it a star and share it.**
 
 *"Together, we can use technology to make cities more compassionate."* ❤️
