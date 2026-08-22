@@ -9,6 +9,7 @@
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
 <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white"/>
 ---------------------------------------------------
+---------------------------------------------------
 
 🐾 Stray Animal Emergency Response Platform
 ---------------------------------------------------
